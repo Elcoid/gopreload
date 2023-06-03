@@ -41,17 +41,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <errno.h>
 #include <string.h>
 
+/* Read and discard entirely the content of the file whose descriptor is passed
+ * as fd */
 static int heat_the_cache(int fd)
 {
 	char buf[1024];
-	int rv;
+	ssize_t nb; // Number of bytes read
 
+	// Loop while there is content to read or if there was an interruption
 	do
 	{
-		rv = read(fd, buf, sizeof(buf));
-	} while (rv > 0 || (rv == -1 && errno == EINTR));
+		nb = read(fd, buf, sizeof(buf));
+	} while (nb > 0 || (nb == -1 && errno == EINTR));
 
-	return rv != 0;
+	return nb != 0;
 }
 
 int main(int argc, char *argv[])
