@@ -45,10 +45,12 @@ static int heat_the_cache(int fd)
 {
 	char buf[1024];
 	int rv;
-	do {
+	do
+	{
 	retry_read:
 		rv = read(fd, buf, sizeof(buf));
-		if( -1 == rv && EINTR == errno ) {
+		if( -1 == rv && EINTR == errno )
+		{
 			goto retry_read;
 		}
 	} while( 0 < rv );
@@ -63,7 +65,8 @@ int main(int argc, char *argv[])
 	fd_set phony_fdset;
 	struct rlimit mlock_limit;
 
-	if( 2 > argc ) {
+	if( 2 > argc )
+	{
 		fprintf(stderr,
 			"Usage:\n\n"
 			"%s [filename list]\n\n"
@@ -73,7 +76,8 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	if( -1 == getrlimit(RLIMIT_MEMLOCK, &mlock_limit) ) {
+	if( -1 == getrlimit(RLIMIT_MEMLOCK, &mlock_limit) )
+	{
 		fprintf(stderr,
 			"error getrlimit(RLIMIT_MEMLOCK): %s\n",
 			strerror(errno) );
@@ -101,10 +105,14 @@ int main(int argc, char *argv[])
 
 		retry_open:
 		fd = open(filename, O_RDONLY);
-		if( -1 == fd ) {
-			if( EINTR == errno ) {
+		if( -1 == fd )
+		{
+			if( EINTR == errno )
+			{
 				goto retry_open;
-			} else {
+			}
+			else
+			{
 				//fprintf(stderr,"è luno: %n \n",sizeof(filename));
 				fprintf(stderr,
 					"error while opening: %s %s\n",
@@ -115,7 +123,8 @@ int main(int argc, char *argv[])
 			}
 		}
 
-		if( -1 == fstat(fd, &st) ) {
+		if( -1 == fstat(fd, &st) )
+		{
 			fprintf(stderr,
 				"error fstat(fd['%s']): %s\n",
 				filename,
@@ -123,7 +132,8 @@ int main(int argc, char *argv[])
 			goto finish_file;
 		}
 
-		if( locked_memory + st.st_size > mlock_limit.rlim_cur ) {
+		if( locked_memory + st.st_size > mlock_limit.rlim_cur )
+		{
 			//under systemd it seems to be able to lock the pages depsite this error message
 			//so comment the error.
 			/*fprintf(stderr,
@@ -145,7 +155,8 @@ int main(int argc, char *argv[])
 			MAP_SHARED | MAP_LOCKED,
 			fd,
 			0 );
-		if( MAP_FAILED == ptr ) {
+		if( MAP_FAILED == ptr )
+		{
 			fprintf(stderr,
 				"error mmap(fd['%s'], 0..%lld): %s\n",
 				filename,
@@ -154,7 +165,8 @@ int main(int argc, char *argv[])
 			goto finish_file;
 		}
 
-		if( -1 == mlock(ptr, st.st_size) ) {
+		if( -1 == mlock(ptr, st.st_size) )
+		{
 			fprintf(stderr,
 				"error mlock(ptr[fd['%s']]=%p): %s\n",
 				filename,
@@ -163,10 +175,13 @@ int main(int argc, char *argv[])
 			goto finish_file;
 		}
 
-		if( locked_memory + st.st_size < locked_memory ) {
+		if( locked_memory + st.st_size < locked_memory )
+		{
 			/* overflow */
 			locked_memory = -1;
-		} else {
+		}
+		else
+		{
 			locked_memory += st.st_size;
 		}
 
@@ -180,7 +195,8 @@ int main(int argc, char *argv[])
 
 
 	/*
-	if( !locked_memory ) {
+	if( !locked_memory )
+	{
 		fprintf(stderr,
 			"nothing locked, exiting.\n");
 		return 1;
@@ -198,7 +214,8 @@ int main(int argc, char *argv[])
 	 * So by selecting for a read a fd on /dev/null we can put the
 	 * process to sleep. */
 	fd_null = open("/dev/null", O_RDONLY);
-	if( -1 == fd_null ) {
+	if( -1 == fd_null )
+	{
 		fprintf(stderr,
 			"error open('/dev/null'): %s\n",
 			strerror(errno) );
@@ -206,7 +223,8 @@ int main(int argc, char *argv[])
 	}
 	FD_ZERO(&phony_fdset);
 	FD_SET(fd_null, &phony_fdset);
-	if( -1 == select(fd_null, &phony_fdset, NULL, NULL, NULL) ) {
+	if( -1 == select(fd_null, &phony_fdset, NULL, NULL, NULL) )
+	{
 		fprintf(stderr,
 			"error select(...): %s\n",
 			strerror(errno) );
