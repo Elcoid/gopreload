@@ -61,7 +61,7 @@ static int heat_the_cache(int fd)
 int main(int argc, char *argv[])
 {
 	unsigned long long locked_memory;
-	int i, fd_null;
+	int fd_null;
 	fd_set phony_fdset;
 	struct rlimit mlock_limit;
 
