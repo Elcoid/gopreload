@@ -45,15 +45,11 @@ static int heat_the_cache(int fd)
 {
 	char buf[1024];
 	int rv;
+
 	do
 	{
-	retry_read:
 		rv = read(fd, buf, sizeof(buf));
-		if(-1 == rv && errno == EINTR)
-		{
-			goto retry_read;
-		}
-	} while(0 < rv);
+	} while (rv > 0 || (rv == -1 && errno == EINTR));
 
 	return rv != 0;
 }
