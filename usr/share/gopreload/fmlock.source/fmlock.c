@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 	FILE *list_fdp = fopen(list_name, "r");
 	char filename[1024];
 	
-	while(fgets(filename,sizeof filename ,list_fdp)) //iterate through lines
+	while(fgets(filename, sizeof filename, list_fdp)) //iterate through lines
 	{
 		filename[strcspn(filename, "\r\n")] = 0; // works for LF, CR, CRLF, LFCR, ...
 		int fd;
