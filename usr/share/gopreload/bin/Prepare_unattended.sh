@@ -104,9 +104,9 @@ echo "cmd=$@" > $OUTFILE
 for i in $(cat /tmp/openlibs2.$EUID.txt); do
 	COUNTER=`expr $COUNTER + 1`
 	echo -ne "\r$COUNTER on $TOTAL done, will use `expr $TOTSIZE / 1024`MB to preload them"
-	SIZE=0`ls -1sd /$i 2>/dev/null | cut -d "/" -f 1 | grep [0-9]|cut -d " " -f 1`
+	SIZE=0`ls -1sd /$i 2>/dev/null | cut -d "/" -f 1 | grep [0-9] | cut -d " " -f 1`
 	if [ $SIZE -lt $MAXKB ]; then
-		file "$i"|grep -v directory |cut -f 1 -d ":" >> $OUTFILE
+		file "$i" | grep -v directory | cut -f 1 -d ":" >> $OUTFILE
 		TOTSIZE=`expr $TOTSIZE + $SIZE`
 	else
 		echo
