@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/share/gopreload/bin/StartPreload.sh 2>&1
