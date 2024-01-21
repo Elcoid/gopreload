@@ -1,0 +1,7 @@
+#!/bin/sh
+
+rm /etc/gopreload.conf
+rm /etc/runit/runsvdir/current/gopreload
+rm -r /etc/runit/sv/gopreload
+rm -r /usr/share/gopreload
+rm -r /var/log/gopreload
